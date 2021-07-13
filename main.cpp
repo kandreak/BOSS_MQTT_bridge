@@ -1,5 +1,6 @@
 #include <iostream>
 #include <mosquitto.h>
+#include <Expression.hpp>
 
 void my_message_callback(struct mosquitto *mosq, void *userdata, const struct mosquitto_message *message)
 {
