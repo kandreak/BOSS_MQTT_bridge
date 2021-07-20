@@ -1,11 +1,36 @@
 #include <iostream>
 #include <mosquitto.h>
+#include <nlohmann/json.hpp>
+#include <vector>
+
+// for convenience
+using json = nlohmann::json;
+std::vector < json > jsonVector;
 
 void my_message_callback(struct mosquitto *mosq, void *userdata, const struct mosquitto_message *message)
 {
+	json data;
     //K: TODO things with message
 	if(message->payloadlen){
-		printf("%s %s\n", message->topic, message->payload);
+		//printf("%s %s\n", message->topic, message->payload);
+
+		//K: json stuff
+		std::string str = (char*)message->payload;
+		data = json::parse(str);
+
+		jsonVector.push_back(data);
+
+		std::cout << "\n==========\n";
+		std::cout << "message received on topic " << message->topic << "\n";
+		//std::cout << "vector size: " << jsonVector.size() << "\n";
+		std::cout << "\n";
+		std::cout << "id: " << data.at("id") << "\n";
+		std::cout << "groupId: " << data.at("groupId") << "\n";
+		std::cout << "\n";
+		std::cout << "data: " << data.at("data");
+		std::cout << "\n==========\n";
+		
+		// printf(" id is: %s", data.at("id"));
 	}else{
 		printf("%s (null)\n", message->topic);
 	}
